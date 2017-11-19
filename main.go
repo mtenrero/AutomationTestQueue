@@ -3,7 +3,8 @@ package main
 var gWardrobe Wardrobe
 
 func main() {
-	gWardrobe := NewWardrobe()
+	tools := LoadConfig("tools.yml")
+	gWardrobe := NewWardrobe(tools)
 
 	networkHandler(gWardrobe)
 }

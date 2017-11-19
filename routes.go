@@ -9,7 +9,14 @@ import (
 
 func (wardrobe *Wardrobe) uploadTest(context *gin.Context) {
 	nameParam := context.PostForm("name")
-	testTypeParam := context.PostForm("testType")
+	toolAlias := context.PostForm("toolAlias")
+
+	tool := wardrobe.tools.Find(toolAlias)
+
+	if tool == nil {
+		context.JSON(http.StatusRequestedRangeNotSatisfiable, gin.H{"error": "The Tool specified is not available", "tools": *wardrobe.tools})
+		return
+	}
 
 	file, err := context.FormFile("file")
 	if err != nil {
@@ -23,9 +30,9 @@ func (wardrobe *Wardrobe) uploadTest(context *gin.Context) {
 		return
 	}
 
-	testType := TestType{testTypeParam, "Apache Jmeter", "jmeterEntrypoint.sh"}
+	test := Test{tool, file.Filename}
 
-	wardrobe = wardrobe.AddTest(&Test{&testType, file.Filename})
+	wardrobe = wardrobe.AddTest(&test)
 
 	context.JSON(http.StatusOK, gin.H{"availableTests": len(*wardrobe.tests), "tests": *wardrobe.tests, "addedTest": nameParam})
 }
