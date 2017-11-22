@@ -7,7 +7,7 @@ import "github.com/mtenrero/AutomationTestQueue/configLoader"
 func LoadConfig(path string) *configLoader.Tools {
 	var tools *configLoader.Tools
 
-	tools = tools.LoadConfigYaml(path)
+	tools = configLoader.LoadConfigYaml(path)
 
 	return tools
 }
