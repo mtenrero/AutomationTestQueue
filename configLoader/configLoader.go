@@ -9,16 +9,18 @@ import (
 
 // LoadConfigYaml reads the specified YAML config file and return it
 // into the Config struct
-func (config *Tools) LoadConfigYaml(filePath string) *Tools {
+func LoadConfigYaml(filePath string) *Tools {
 	yamlFile, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		log.Fatalf("yamlFile.Get err   #%v ", err)
 	}
 
-	err = yaml.Unmarshal(yamlFile, config)
+	var tools Tools
+
+	err = yaml.Unmarshal(yamlFile, &tools)
 	if err != nil {
 		log.Fatalf("Unmarshal: %v", err)
 	}
 
-	return config
+	return &tools
 }

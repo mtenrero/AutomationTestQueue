@@ -9,8 +9,8 @@ import (
 type Tool struct {
 	Alias  string   `yaml:"alias"`
 	Name   string   `yaml:"name"`
-	Path   string   `yaml:"path"`
-	Params []string `yaml:"params"`
+	path   string   `yaml:"path"`
+	params []string `yaml:"params"`
 }
 
 // Tools represent the container of all Tool
