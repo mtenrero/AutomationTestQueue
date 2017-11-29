@@ -43,7 +43,7 @@ func (wardrobe *Wardrobe) runTest(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"test": test})
 }
 
-func (wardrobe *Wardrobe) GetTests(context *gin.Context) {
+func (wardrobe *Wardrobe) getTests(context *gin.Context) {
 	if len(*wardrobe.tests) == 0 {
 		context.JSON(http.StatusNoContent, gin.H{"testNumber": len(*wardrobe.tests), "tests": *wardrobe.tests})
 	} else {
