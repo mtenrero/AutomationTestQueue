@@ -15,9 +15,9 @@ func networkHandler(wardrobe *Wardrobe) {
 		})
 	})
 	engine.POST("/v1/uploadTest", wardrobe.uploadTest)
-	engine.POST("/v1/test", runTest)
-	engine.GET("/v1/test", wardrobe.GetTests)
-	engine.GET("/v1/tools", wardrobe.GetTools)
+	engine.POST("/v1/test", wardrobe.runTest)
+	engine.GET("/v1/test", wardrobe.getTests)
+	engine.GET("/v1/tools", wardrobe.getTools)
 	engine.Run() // listen and serve on 0.0.0.0:8080 by default
 
 }

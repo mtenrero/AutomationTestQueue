@@ -4,6 +4,12 @@ tools:
   - alias: JMX_MOD
     name: Apache Jmeter Test
     path: ../jmeter_starpoint.sh
-    params:
+    envs:
       - file
       - mode
+      - remotes
+  - alias: ECHO
+    name: Echo Tool
+    path: echo $MESSAGE
+    envs:
+      - message

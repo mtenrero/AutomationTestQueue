@@ -37,11 +37,13 @@ func (wardrobe *Wardrobe) uploadTest(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"availableTests": len(*wardrobe.tests), "tests": *wardrobe.tests, "addedTest": nameParam})
 }
 
-func runTest(context *gin.Context) {
-
+func (wardrobe *Wardrobe) runTest(context *gin.Context) {
+	test := wardrobe.GetTest(context.PostForm("name"))
+	fmt.Println(test.Name)
+	context.JSON(http.StatusOK, gin.H{"test": test})
 }
 
-func (wardrobe *Wardrobe) GetTests(context *gin.Context) {
+func (wardrobe *Wardrobe) getTests(context *gin.Context) {
 	if len(*wardrobe.tests) == 0 {
 		context.JSON(http.StatusNoContent, gin.H{"testNumber": len(*wardrobe.tests), "tests": *wardrobe.tests})
 	} else {
@@ -49,6 +51,6 @@ func (wardrobe *Wardrobe) GetTests(context *gin.Context) {
 	}
 }
 
-func (wardrobe *Wardrobe) GetTools(context *gin.Context) {
+func (wardrobe *Wardrobe) getTools(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"tools": wardrobe.tools.Tools})
 }

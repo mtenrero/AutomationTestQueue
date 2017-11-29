@@ -7,10 +7,10 @@ import (
 // Tool struct represents the tools available on the target system.
 // All paths must be valid
 type Tool struct {
-	Alias  string   `yaml:"alias"`
-	Name   string   `yaml:"name"`
-	path   string   `yaml:"path"`
-	params []string `yaml:"params"`
+	Alias string   `yaml:"alias"`
+	Name  string   `yaml:"name"`
+	path  string   `yaml:"path"`
+	Envs  []string `yaml:"envs"`
 }
 
 // Tools represent the container of all Tool
