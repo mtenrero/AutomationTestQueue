@@ -1,0 +1,15 @@
+# In this file should appear the tools which will be available in the ATQ API interface
+# You must specify name, alias, full path to tool binary
+tools:
+  - alias: JMX_MOD
+    name: Apache Jmeter Test
+    path: ../jmeter_starpoint.sh
+    envs:
+      - file
+      - mode
+      - remotes
+  - alias: ECHO
+    name: Echo Tool
+    path: echo $MESSAGE
+    envs:
+      - message
