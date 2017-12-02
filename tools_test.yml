@@ -1,0 +1,8 @@
+# Example file for testing purposes
+tools:
+  - alias: TEST_TOOL
+    name: Unrunnable test tool
+    path: /bin/none
+    envs:
+      - env1
+      - env2

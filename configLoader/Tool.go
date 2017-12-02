@@ -34,7 +34,7 @@ func (tools *Tools) Find(alias string) *Tool {
 	return nil
 }
 
-// GetPath exports the path variable to ve visible during development but not in yaml exports
+// GetPath exports the path variable to be visible during development but not in yaml exports
 func (tool *Tool) GetPath() string {
 	return tool.path
 }
