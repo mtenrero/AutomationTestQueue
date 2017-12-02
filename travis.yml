@@ -1,0 +1,14 @@
+language: go
+
+go:
+  - tip
+  - master
+
+before_script:
+  - go get -t -d -v ./... 
+
+script:
+  - go build -v ./...
+
+after_script:
+  - go test -cpu=1,2 -v -tags unit ./...
