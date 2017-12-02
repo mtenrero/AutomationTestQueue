@@ -40,7 +40,13 @@ func (wardrobe *Wardrobe) uploadTest(context *gin.Context) {
 func (wardrobe *Wardrobe) runTest(context *gin.Context) {
 	test := wardrobe.GetTest(context.PostForm("name"))
 	fmt.Println(test.Name)
-	context.JSON(http.StatusOK, gin.H{"test": test})
+
+	tool := test.Tool
+	requirementsOK := tool.CheckEnvs(context)
+
+	if requirementsOK {
+		context.JSON(http.StatusOK, gin.H{"test": test})
+	}
 }
 
 func (wardrobe *Wardrobe) getTests(context *gin.Context) {

@@ -22,3 +22,4 @@
 hs_err_pid*
 
 debug
+.vscode/launch.json

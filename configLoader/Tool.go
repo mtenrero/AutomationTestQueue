@@ -2,6 +2,9 @@ package configLoader
 
 import (
 	"log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Tool struct represents the tools available on the target system.
@@ -29,4 +32,20 @@ func (tools *Tools) Find(alias string) *Tool {
 	}
 	log.Printf("TOOL NOT FOUND: %s.\n", alias)
 	return nil
+}
+
+// GetPath exports the path variable to ve visible during development but not in yaml exports
+func (tool *Tool) GetPath() string {
+	return tool.path
+}
+
+// CheckEnvs ensures that all the required envs are available in the given Request Context
+func (tool *Tool) CheckEnvs(context *gin.Context) bool {
+	for _, envName := range tool.Envs {
+		if context.PostForm(envName) == "" {
+			context.JSON(http.StatusBadRequest, gin.H{"message": "The request not specifies all the variables required to run the test", "envs": tool.Envs})
+			return false
+		}
+	}
+	return true
 }
