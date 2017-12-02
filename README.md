@@ -1,4 +1,6 @@
 # Automation Test Queue (ATQ) 
+[![Build Status](https://semaphoreci.com/api/v1/mtenrero/automationtestqueue/branches/master/shields_badge.svg)](https://semaphoreci.com/mtenrero/automationtestqueue)
+
 ATQ is an HTTP API designed to launch tests over remote machines. 
 It's designed to be integrated in containers or pods with other services.
 

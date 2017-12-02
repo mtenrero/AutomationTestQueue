@@ -6,5 +6,6 @@ func main() {
 	tools := LoadConfig("tools.yml")
 	gWardrobe := NewWardrobe(tools)
 
-	networkHandler(gWardrobe)
+	engine := networkHandler(gWardrobe)
+	engine.Run() // listen and serve on 0.0.0.0:8080 by default
 }
