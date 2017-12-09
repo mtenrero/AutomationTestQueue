@@ -23,64 +23,68 @@ And the following versions will be `https:\\host:port\v2...`
 ## Configuration
 ATQ need some previous configuration in order to work properly, like adding the desired tools in a config file. 
 
-### Tools 
+### **Tools**
+
 The tools you want to make available to use thorugh the HTTP API must be specified in the file **tools.yml** and must be in the root path of the ATQ launcher. You can check up the example files available in this repository.
 
 Available fields:
 
-    * **Alias**: Public alias exposed in the API. **Unique & Required**
-    * **Name**: Tool's detailed name. **Required**
-    * **Path**: **Full** path to the tool in the system. Relative paths may not work in certain systems. **Required**
-        If your tool requires some args, you should put the name of the Env in uppercase characters before a **$**(USD) symbol.
-        If the tool requires a **File** in the arguments, you can put the **$FILE** identifier.
-    * **Envs**: Environment variables required to launch the tool. **Optional**
-        Environment variables can be converted to program arguments specifying the declared environment variable name in the path after a USD symbol
+* **Alias**: Public alias exposed in the API. **Unique & Required**
+* **Name**: Tool's detailed name. **Required**
+* **Path**: **Full** path to the tool in the system. Relative paths may not work in certain systems. **Required**
+    If your tool requires some args, you should put the name of the Env in uppercase characters before a **$**(USD) symbol.
+    If the tool requires a **File** in the arguments, you can put the **$FILE** identifier.
+* **Envs**: Environment variables required to launch the tool. **Optional**
+    Environment variables can be converted to program arguments specifying the declared environment variable name in the path after a USD symbol
 
     NOTE: Check the tools.yml and tools_test.yml files for examples.
 
-## API 
+## API
 
-### **GET** /v1/tools
+## **GET** /v1/tools
 This request doesn't need any parameters
 
-    * **200** Returns the available tools in the server in JSON format:
-    `{
-        "tools": [
-            {
-                "Alias": "JMX_MOD",
-                "Name": "Apache Jmeter Test",
-                "Envs": [
-                    "file",
-                    "mode",
-                    "remotes"
-                ]
-            },
-            {
-                "Alias": "ECHO",
-                "Name": "Echo Tool",
-                "Envs": [
-                    "message"
-                ]
-            }
-        ]
-    }`
-    * **204** There isn't any tool available. You must configure the tool.yml before launch ATQ!.
+* **200** Returns the available tools in the server in JSON format:
 
-### **GET** /v1/test
+`{
+    "tools": [
+        {
+            "Alias": "JMX_MOD",
+            "Name": "Apache Jmeter Test",
+            "Envs": [
+                "file",
+                "mode",
+                "remotes"
+            ]
+        },
+        {
+            "Alias": "ECHO",
+            "Name": "Echo Tool",
+            "Envs": [
+                "message"
+            ]
+        }
+    ]
+}`
+
+* **204** There isn't any tool available. You must configure the tool.yml before launch ATQ!.
+
+## **GET** /v1/test
 Returns the uploaded tests available to launch in the server. May not include any request parameter
 
-    * **204** There are not any test in the server yet.
-    * **200** Returns a JSON structure with the uploaded tests to the server.
+* **204** There are not any test in the server yet.
+* **200** Returns a JSON structure with the uploaded tests to the server.
 
-### **POST** /v1/uploadTest (Multipart)
+## **POST** /v1/uploadTest (Multipart)
 Send a file to the server.
 **Requires at least two parameters:**
 
-    * **name**: Test Name
-    * **toolAlias**: Required tool wich will be launched with. Must be declared in the ***config.yml*** file.
+* **name**: Test Name
+* **toolAlias**: Required tool wich will be launched with. Must be declared in the ***config.yml*** file.
+
 **Optional:**
 
-    * **envs**: Environment variables required to launch the test.
+* **envs**: Environment variables required to launch the test.
 
 ### **POST** /v1/test
 Run the test with the specified tool
