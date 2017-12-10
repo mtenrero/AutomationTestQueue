@@ -9,6 +9,8 @@ before_script:
 
 script:
   - go build -v ./...
-
-after_script:
   - go test -cpu=1,2 -v -tags unit ./...
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
