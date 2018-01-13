@@ -136,5 +136,5 @@ func TestGetEnvsFromRequest(t *testing.T) {
 
 	values := req.URL.Query
 
-	fmt.Println(values)
+	fmt.Println(values())
 }
