@@ -38,16 +38,3 @@ func controllerNetworkHandler(context *ATQContext) *gin.Engine {
 
 	return engine
 }
-
-// Gin Router, listen defined endpoints
-func basicNetworkHandler() *gin.Engine {
-	engine := gin.Default()
-	engine.MaxMultipartMemory = 8 << 20
-
-	engine.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	return engine
-}
