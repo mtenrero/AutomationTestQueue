@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/mtenrero/AutomationTestQueue/configLoader"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,27 +28,45 @@ func (wardrobe *Wardrobe) uploadTest(context *gin.Context) {
 
 	if err := context.SaveUploadedFile(file, file.Filename); err != nil {
 		context.String(http.StatusBadRequest, fmt.Sprintf("upload file err: %s", err.Error()))
-		context.JSON(http.StatusServiceUnavailable, gin.H{"availableTests": len(*wardrobe.tests), "tests": *wardrobe.tests})
 		return
 	}
 
-	test := Test{tool, file.Filename}
+	test := configLoader.Test{tool, file.Filename, nil}
 
 	wardrobe = wardrobe.AddTest(&test)
 
 	context.JSON(http.StatusOK, gin.H{"availableTests": len(*wardrobe.tests), "tests": *wardrobe.tests, "addedTest": nameParam})
 }
 
-func (wardrobe *Wardrobe) runTest(context *gin.Context) {
-	test := wardrobe.GetTest(context.PostForm("name"))
-	fmt.Println(test.Name)
-
-	tool := test.Tool
+func parseEnvs(tool *configLoader.Tool, context *gin.Context) map[string]string {
 	requirementsOK := tool.CheckEnvs(context)
+	mapEnvs := make(map[string]string)
 
 	if requirementsOK {
-		context.JSON(http.StatusOK, gin.H{"test": test})
+		for _, envName := range tool.Envs {
+			mapEnvs[envName] = context.PostForm(envName)
+		}
 	}
+	return mapEnvs
+}
+
+func (wardrobe *Wardrobe) runTest(context *gin.Context) {
+	test, err := wardrobe.GetTest(context.PostForm("name"))
+	if err != nil {
+		context.JSON(http.StatusNotFound, gin.H{"message": "Test Not Found", "output": nil})
+	} else {
+		fmt.Println(test.Name)
+
+		tool := test.Tool
+		requirementsOK := tool.CheckEnvs(context)
+
+		//out := toolRunner.ExecTest(test)
+
+		if requirementsOK {
+			context.JSON(http.StatusOK, gin.H{"output": "out"})
+		}
+	}
+
 }
 
 func (wardrobe *Wardrobe) getTests(context *gin.Context) {

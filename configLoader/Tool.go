@@ -21,6 +21,13 @@ type Tools struct {
 	Tools []Tool `yaml:"tools"`
 }
 
+// Make initialize a new Tool with the specified parameters
+func (t *Tool) Make(alias, name, path string, envs []string) *Tool {
+	tool := Tool{Alias: alias, Name: name, path: path, Envs: envs}
+
+	return &tool
+}
+
 // Find tries to find for a Tool in the loaded Tools by alias, if the Tool
 // can't be found, then returns nil
 func (tools *Tools) Find(alias string) *Tool {
@@ -49,3 +56,13 @@ func (tool *Tool) CheckEnvs(context *gin.Context) bool {
 	}
 	return true
 }
+
+// ParseEnv returns a map with the parsed environment variables ready to use.
+// The key is the env name, and the value, the value itself in string format
+//func (tool *Tool) ParseEnv(test *Test) map[string]string {
+//	envsMap := make(map[string]string)
+//	for _, envName := range tool.Envs {
+//		envsMap[envName] = test
+//	}
+//	return envsMap
+//}
