@@ -74,3 +74,18 @@ func (regColl *RegistryCollection) IsRegistered(hostname string) *RegistryEntry 
 
 	return nil
 }
+
+// RegistriesMembersOf returns a Collection of RegistryEntries with the containers included in a given group
+func (regColl *RegistryCollection) RegistriesMembersOf(group string) *RegistryCollection {
+	registry := NewRegistryCollection()
+
+	for _, registryEntry := range *regColl {
+		fmt.Println(registryEntry.Hostname)
+		if registryEntry.Group == group {
+			newRegistry, _ := registry.Add(&registryEntry)
+			registry = newRegistry
+		}
+	}
+
+	return registry
+}
