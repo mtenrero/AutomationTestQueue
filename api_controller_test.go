@@ -40,7 +40,7 @@ func TestRegistration(t *testing.T) {
 	form.Add("group", "GROUP")
 
 	recorder := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", apiVersion+"/register", nil)
+	req, _ := http.NewRequest("POST", apiVersion+"/container", nil)
 	req.PostForm = form
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	engine.ServeHTTP(recorder, req)

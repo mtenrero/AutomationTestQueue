@@ -2,11 +2,18 @@ package serviceDiscovery
 
 // Registry is one entry in the Service-Discovery Registry
 import (
-	"fmt"
 	"net"
 )
 
 // RegistryEntry is an entry of the Registry collection which contains the state of a registered container
+/**
+ * @apiDefine RegistryEntry
+ * @apiSuccess {int} 		uuid 			unique Identifier of the container in the Controller.
+ * @apiSuccess {string} 	virtualIP 		Virtual IP of the container
+ * @apiSuccess {status} 	status 			Current status of the container
+ * @apiSuccess {string} 	hostname		Container's hostname
+ * @apiSuccess {string} 	group 			Group which the container belongs to
+ */
 type RegistryEntry struct {
 	UUID      int64   `json:"uuid"`
 	VirtualIP *net.IP `json:"virtualIP"`
@@ -66,7 +73,6 @@ func NewRegistryCollection() *RegistryCollection {
 // IsRegistered checks if a hostname is already registered in the Registry
 func (regColl *RegistryCollection) IsRegistered(hostname string) *RegistryEntry {
 	for _, registryEntry := range *regColl {
-		fmt.Println(registryEntry.Hostname)
 		if registryEntry.Hostname == hostname {
 			return &registryEntry
 		}
@@ -80,7 +86,6 @@ func (regColl *RegistryCollection) RegistriesMembersOf(group string) *RegistryCo
 	registry := NewRegistryCollection()
 
 	for _, registryEntry := range *regColl {
-		fmt.Println(registryEntry.Hostname)
 		if registryEntry.Group == group {
 			newRegistry, _ := registry.Add(&registryEntry)
 			registry = newRegistry

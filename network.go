@@ -34,7 +34,9 @@ func controllerNetworkHandler(context *ATQContext) *gin.Engine {
 		})
 	})
 
-	engine.POST("/v1/register", context.postRegisterNewContainer)
+	engine.POST("/v1/container", context.postRegisterNewContainer)
+	engine.GET("/v1/containers/:group", context.GetContainersByGroup)
+	engine.GET("/v1/container/:hostname", context.getContainer)
 
 	return engine
 }
