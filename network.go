@@ -1,6 +1,8 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 var engine *gin.Engine
 
@@ -22,8 +24,7 @@ func networkHandler(wardrobe *Wardrobe) *gin.Engine {
 	return engine
 }
 
-// Gin Router, listen defined endpoints
-func basicNetworkHandler() *gin.Engine {
+func controllerNetworkHandler(context *ATQContext) *gin.Engine {
 	engine := gin.Default()
 	engine.MaxMultipartMemory = 8 << 20
 
@@ -32,5 +33,10 @@ func basicNetworkHandler() *gin.Engine {
 			"message": "pong",
 		})
 	})
+
+	engine.POST("/v1/container", context.postRegisterNewContainer)
+	engine.GET("/v1/containers/:group", context.GetContainersByGroup)
+	engine.GET("/v1/container/:hostname", context.getContainer)
+
 	return engine
 }

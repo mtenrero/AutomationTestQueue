@@ -1,0 +1,7 @@
+{
+  "name": "Automation Test Queue",
+  "version": "0.1.0",
+  "description": "Automation Test Queue REST API documentation",
+  "title": "Automation Test Queue",
+  "url" : "https://localhost:8080/v1"
+}

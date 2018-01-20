@@ -1,6 +1,6 @@
 # Automation Test Queue (ATQ) 
 [![Build Status](https://api.travis-ci.org/mtenrero/AutomationTestQueue.svg)](https://travis-ci.org/mtenrero/AutomationTestQueue)
-[![codecov](https://codecov.io/gh/mtenrero/AutomationTestQueue/branch/master/graph/badge.svg)](https://codecov.io/gh/mtenrero/AutomationTestQueue)
+[![Coverage Status](https://coveralls.io/repos/github/mtenrero/AutomationTestQueue/badge.svg?branch=golang-dev)](https://coveralls.io/github/mtenrero/AutomationTestQueue?branch=golang-dev)
 [![GoReport](https://goreportcard.com/badge/github.com/mtenrero/AutomationTestQueue)
 
 ATQ is an HTTP API designed to launch tests over remote machines.
