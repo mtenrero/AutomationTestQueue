@@ -46,3 +46,12 @@ func TestGetEnvNoEnvs(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestGetVip(t *testing.T) {
+	_, err := getVIP()
+
+	if err != nil {
+		t.Fail()
+	}
+
+}

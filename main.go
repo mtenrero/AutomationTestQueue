@@ -2,13 +2,17 @@ package main
 
 import (
 	"flag"
-	"log"
 	"os"
 
 	"github.com/mtenrero/AutomationTestQueue/serviceDiscovery"
+	log "github.com/sirupsen/logrus"
 )
 
 var gWardrobe Wardrobe
+
+func init() {
+	log.SetOutput(os.Stdout)
+}
 
 func main() {
 
@@ -17,13 +21,16 @@ func main() {
 
 	switch *mode {
 	case "controller":
+		log.WithField("mode", *mode).Info("Starting Controller Mode…")
 		startController()
 	case "registrator":
+		log.WithField("mode", *mode).Info("Starting Registrator Mode…")
 		startRegistrator()
 	case "brainmaster":
+		log.WithField("mode", *mode).Info("Starting BrainMaster Mode…")
 		startBrainMaster()
 	default:
-		log.Fatal("No valid ATQ execution mode detected! controller/registrator/brainmaster")
+		log.WithField("mode", *mode).Fatal("No valid ATQ execution mode detected!")
 		os.Exit(-1)
 	}
 }
@@ -39,7 +46,7 @@ func startController() {
 }
 
 func startRegistrator() {
-
+	serviceDiscovery.Register()
 }
 
 func startBrainMaster() {

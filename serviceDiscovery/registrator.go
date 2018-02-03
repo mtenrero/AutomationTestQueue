@@ -7,18 +7,26 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/mtenrero/AutomationTestQueue/dockerResolver"
+	log "github.com/sirupsen/logrus"
 )
 
 // Register a new container in the Registry
 func Register() error {
 	fcAddr, err := GetFlightControllerEnv()
 	if err == nil {
+		logger.WithFields(log.Fields{
+			"event": "getFlightControllerEnv",
+			"key":   err,
+		}).Error("Failed to get Controller endpoint environment variable")
 		return err
 	}
 
 	ipAddr, err := getVIP()
 	if err == nil {
+		logger.WithFields(log.Fields{
+			"event": "getVIP",
+			"key":   err,
+		}).Error("Failed to get container/host address")
 		return err
 	}
 
@@ -26,36 +34,12 @@ func Register() error {
 
 	register(fullAddr, ipAddr)
 	return nil
-
-}
-
-func ControllerAlive() bool {
-
-	return true
-}
-
-func checkRegistration() bool {
-
-	return true
-}
-
-func getVIP() (*net.IP, error) {
-	hostname, err := dockerResolver.GetHostname()
-	if err == nil {
-		return nil, err
-	}
-
-	ipAddr, err := dockerResolver.GetVIP4(hostname)
-	if err == nil {
-		return nil, err
-	}
-
-	return ipAddr, nil
 }
 
 func register(fcAddr string, containerIP *net.IP) (*RegistryEntry, error) {
 	form := url.Values{
 		"containerIP": {containerIP.String()},
+		"group":       {"ATQ"},
 	}
 
 	body := bytes.NewBufferString(form.Encode())
