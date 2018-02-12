@@ -37,6 +37,10 @@ func Register() error {
 }
 
 func register(fcAddr *url.URL, containerIP *net.IP) (*RegistryEntry, error) {
+
+	registerLogger := logger.WithFields(log.Fields{
+		"event": "POSTregister"})
+
 	form := url.Values{
 		"containerIP": {containerIP.String()},
 		"group":       {"ATQ"},
@@ -44,13 +48,26 @@ func register(fcAddr *url.URL, containerIP *net.IP) (*RegistryEntry, error) {
 
 	body := bytes.NewBufferString(form.Encode())
 
-	_, err := http.Post(fcAddr.String()+controllerPath, "application/x-www-form-urlencoded", body)
+	resp, err := http.Post(fcAddr.String()+controllerPath, "application/x-www-form-urlencoded", body)
 	if err != nil {
-		logger.WithFields(log.Fields{
-			"event": "POSTregister",
+		registerLogger.WithFields(log.Fields{
 			"error": err,
 		}).Error("Failed to Register the container in the Controller")
 		return nil, err
+	}
+
+	switch resp.StatusCode {
+	case 200:
+		registerLogger.WithFields(log.Fields{
+			"statusCode": resp.StatusCode}).Info("The container was succesfully registered")
+		break
+	case 409:
+		registerLogger.WithFields(log.Fields{
+			"statusCode": resp.StatusCode}).Warn("The container it's already registered")
+		break
+	default:
+		registerLogger.WithFields(log.Fields{
+			"statusCode": resp.StatusCode}).Error("Unexptected HTTP Response registering the container")
 	}
 
 	return nil, newErrMissingEnvs("Unable to contact with FlightController")
