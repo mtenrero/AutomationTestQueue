@@ -5,7 +5,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -13,30 +12,28 @@ import (
 // Register a new container in the Registry
 func Register() error {
 	fcAddr, err := GetFlightControllerEnv()
-	if err == nil {
+	if err != nil {
 		logger.WithFields(log.Fields{
 			"event": "getFlightControllerEnv",
-			"key":   err,
+			"error": err,
 		}).Error("Failed to get Controller endpoint environment variable")
 		return err
 	}
 
 	ipAddr, err := getVIP()
-	if err == nil {
+	if err != nil {
 		logger.WithFields(log.Fields{
 			"event": "getVIP",
-			"key":   err,
+			"error": err,
 		}).Error("Failed to get container/host address")
 		return err
 	}
 
-	fullAddr := fcAddr.Hostname + ":" + strconv.Itoa(fcAddr.Port)
-
-	register(fullAddr, ipAddr)
+	register(fcAddr, ipAddr)
 	return nil
 }
 
-func register(fcAddr string, containerIP *net.IP) (*RegistryEntry, error) {
+func register(fcAddr *url.URL, containerIP *net.IP) (*RegistryEntry, error) {
 	form := url.Values{
 		"containerIP": {containerIP.String()},
 		"group":       {"ATQ"},
@@ -44,8 +41,12 @@ func register(fcAddr string, containerIP *net.IP) (*RegistryEntry, error) {
 
 	body := bytes.NewBufferString(form.Encode())
 
-	_, err := http.Post(fcAddr, "application/x-www-form-urlencoded", body)
+	_, err := http.Post(fcAddr.String(), "application/x-www-form-urlencoded", body)
 	if err != nil {
+		logger.WithFields(log.Fields{
+			"event": "POSTregister",
+			"error": err,
+		}).Error("Failed to Register the container in the Controller")
 		return nil, err
 	}
 

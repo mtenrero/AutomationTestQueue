@@ -1,16 +1,15 @@
 package dockerResolver
 
 import (
-	"fmt"
 	"net"
 	"os"
 	"strings"
 
 	"github.com/lextoumbourou/goodhosts"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
-var logger = log.WithFields(log.Fields{
+var logger = logrus.WithFields(logrus.Fields{
 	"action": "dockerresolver",
 	"mode":   "registrator",
 })
@@ -73,7 +72,6 @@ func GetVIP4(hostname string) (*net.IP, error) {
 				ipaddr := net.ParseIP(line.IP)
 
 				if ipaddr.To4() != nil {
-					fmt.Println(line.IP)
 					return &ipaddr, nil
 				}
 			}

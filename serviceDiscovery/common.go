@@ -2,16 +2,15 @@ package serviceDiscovery
 
 import (
 	"net"
+	"net/url"
 	"os"
-	"strconv"
 
 	"github.com/mtenrero/AutomationTestQueue/dockerResolver"
-	"github.com/mtenrero/AutomationTestQueue/network"
 	log "github.com/sirupsen/logrus"
 )
 
-const HOSTNAME = "FLIGHTCONTROLLER_HOSTNAME"
-const PORT = "FLIGHTCONTROLLER_PORT"
+// ENDPOINT URL given by user by Environment Variable
+const ENDPOINT = "ATQCONTROLLER_ENDPOINT"
 
 var logger = log.WithFields(log.Fields{
 	"action": "register",
@@ -35,22 +34,20 @@ func (e *ErrMissingEnvs) Error() string {
 }
 
 // GetFlightControllerEnv returns the Address of the FlightController if defined
-func GetFlightControllerEnv() (*network.Address, error) {
-	fcHostname, fcHostnameValid := os.LookupEnv(HOSTNAME)
-	fcPortStr, fcPortValid := os.LookupEnv(PORT)
+func GetFlightControllerEnv() (*url.URL, error) {
+	endpointStr, endpointValid := os.LookupEnv(ENDPOINT)
 
-	if !fcHostnameValid || !fcPortValid {
-		logger.WithField(HOSTNAME, fcHostname).Warn("The Controller Hostname Env has not been declared")
+	if !endpointValid {
+		logger.WithField(ENDPOINT, endpointStr).Warn("The Controller Hostname Env has not been declared")
 		return nil, newErrMissingEnvs("The environment variables should be already declared")
 	}
 
-	fcPort, error := strconv.Atoi(fcPortStr)
-	if error != nil {
-		logger.WithField(PORT, fcPort).Warn("The Controller Port Env has not been declared")
-		return nil, newErrMissingEnvs("The specified PORT is not a number!")
+	url, err := url.Parse(endpointStr)
+	if err != nil {
+		logger.WithField("err", err).Error("The given endpoint isn't valid!")
 	}
 
-	return &network.Address{Hostname: fcHostname, Port: fcPort}, nil
+	return url, nil
 }
 
 func getVIP() (*net.IP, error) {
@@ -61,7 +58,7 @@ func getVIP() (*net.IP, error) {
 	}
 
 	ipAddr, err := dockerResolver.GetVIP4(hostname)
-	if err == nil {
+	if err != nil {
 		return nil, err
 	}
 

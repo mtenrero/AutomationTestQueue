@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
+	"github.com/toorop/gin-logrus"
 )
 
 var engine *gin.Engine
@@ -12,6 +14,7 @@ func networkHandler(wardrobe *Wardrobe) *gin.Engine {
 	engine.MaxMultipartMemory = 8 << 20
 
 	engine.GET("/ping", func(c *gin.Context) {
+		logrus.Info("PING!")
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
@@ -24,11 +27,16 @@ func networkHandler(wardrobe *Wardrobe) *gin.Engine {
 	return engine
 }
 
-func controllerNetworkHandler(context *ATQContext) *gin.Engine {
-	engine := gin.Default()
+func controllerNetworkHandler(context *ATQContext, logger *logrus.Logger) *gin.Engine {
+	engine := gin.New()
+	engine.Use(ginlogrus.Logger(logger), gin.Recovery())
+
 	engine.MaxMultipartMemory = 8 << 20
 
 	engine.GET("/ping", func(c *gin.Context) {
+		logrus.Info("PING!")
+		logger.Warn("PING!")
+		logrus.Fatal("dassd")
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
