@@ -9,6 +9,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// controllerPath defines the HTTP Path which will be called to register the container
+var controllerPath = "/v1/container"
+
 // Register a new container in the Registry
 func Register() error {
 	fcAddr, err := GetFlightControllerEnv()
@@ -41,7 +44,7 @@ func register(fcAddr *url.URL, containerIP *net.IP) (*RegistryEntry, error) {
 
 	body := bytes.NewBufferString(form.Encode())
 
-	_, err := http.Post(fcAddr.String(), "application/x-www-form-urlencoded", body)
+	_, err := http.Post(fcAddr.String()+controllerPath, "application/x-www-form-urlencoded", body)
 	if err != nil {
 		logger.WithFields(log.Fields{
 			"event": "POSTregister",
