@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  controller:
+    image: mtenrero/atq-controller
+    tty: true
+    networks: 
+      - atq-testing
+    expose:
+      - 8080
+
+  registrator:
+    image: mtenrero/atq-registrator
+    tty: true
+    networks:
+      - atq-testing
+    depends_on: 
+      - controller
+    environment:
+      - FLIGHTCONTROLLER_HOSTNAME=controller
+      - FLIGHTCONTROLLER_PORT=8080
+
+networks:
+  atq-testing:
+    driver: overlay
