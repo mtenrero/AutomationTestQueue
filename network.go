@@ -34,9 +34,6 @@ func controllerNetworkHandler(context *ATQContext, logger *logrus.Logger) *gin.E
 	engine.MaxMultipartMemory = 8 << 20
 
 	engine.GET("/ping", func(c *gin.Context) {
-		logrus.Info("PING!")
-		logger.Warn("PING!")
-		logrus.Fatal("dassd")
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})

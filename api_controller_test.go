@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/mtenrero/AutomationTestQueue/serviceDiscovery"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,7 +19,7 @@ func TestControllerPing(t *testing.T) {
 
 	atqContext := ATQContext{registry: registry}
 
-	engine := controllerNetworkHandler(&atqContext)
+	engine := controllerNetworkHandler(&atqContext, logrus.New())
 
 	recorder := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/ping", nil)
@@ -31,7 +33,7 @@ func TestRegistration(t *testing.T) {
 
 	atqContext := ATQContext{registry: registry}
 
-	engine := controllerNetworkHandler(&atqContext)
+	engine := controllerNetworkHandler(&atqContext, logrus.New())
 
 	form := url.Values{}
 
