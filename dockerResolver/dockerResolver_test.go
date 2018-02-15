@@ -19,7 +19,7 @@ func TestHostname(t *testing.T) {
 }
 
 func TestGetVIP(t *testing.T) {
-	ipaddr, err := GetVIP4("MacBook-Pro-de-Marcos.local")
+	ipaddr, err := GetVIP4("localhost")
 	if err != nil {
 		t.Error(err)
 	}
