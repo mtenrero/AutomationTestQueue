@@ -2,7 +2,9 @@ package serviceDiscovery
 
 // Registry is one entry in the Service-Discovery Registry
 import (
+	"fmt"
 	"net"
+	"strings"
 )
 
 // RegistryEntry is an entry of the Registry collection which contains the state of a registered container
@@ -93,4 +95,15 @@ func (regColl *RegistryCollection) RegistriesMembersOf(group string) *RegistryCo
 	}
 
 	return registry
+}
+
+// IpsToCsv exports the contained IPs to CSV format
+func (reg *RegistryCollection) IpsToCsv() string {
+	var ips = make([]string, 0, 0)
+	for _, registryEntry := range *reg {
+		vip := *registryEntry.VirtualIP
+		ips = append(ips, vip.String())
+	}
+
+	return strings.Trim(strings.Join(strings.Fields(fmt.Sprint(ips)), ","), "[]")
 }
