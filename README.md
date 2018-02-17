@@ -26,7 +26,7 @@ Controller is the mode which will be used to coordinate all the containers and i
 
 It exposes an API where the registrator component configured in the containers will call to in order to register all the instances.
 
-```
+```bash
 ./atq -mode=controller
 ```
 
@@ -34,7 +34,7 @@ It exposes an API where the registrator component configured in the containers w
 
 Registrator is the component which should be added at the container image startup in order to register and communicate to the Controller.
 
-```
+```bash
 ./atq -mode=registrator
 ```
 
@@ -42,7 +42,7 @@ In order to work, this mode requires an environment variable **ATQCONTROLLER_END
 
 The environment variable can be global, local or specified at the program startup: 
 
-```
+```bash
 env ATQCONTROLLER_ENDPOINT=http://localhost:8080 ./atq -mode=registrator
 ```
 
@@ -82,7 +82,8 @@ This request doesn't need any parameters
 
 * **200** Returns the available tools in the server in JSON format:
 
-`{
+```json
+{
     "tools": [
         {
             "Alias": "JMX_MOD",
@@ -101,7 +102,8 @@ This request doesn't need any parameters
             ]
         }
     ]
-}`
+}
+```
 
 * **204** There isn't any tool available. You must configure the tool.yml before launch ATQ!.
 
