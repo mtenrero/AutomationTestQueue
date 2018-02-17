@@ -20,15 +20,6 @@ func TestGetEnv(t *testing.T) {
 	}
 }
 
-func TestGetEnvPortString(t *testing.T) {
-	os.Setenv(ENDPOINT, ENDPOINT_VAL)
-
-	_, err := GetFlightControllerEnv()
-	if err == nil {
-		t.Error(err)
-	}
-}
-
 func TestGetEnvNoEnvs(t *testing.T) {
 	os.Unsetenv(ENDPOINT)
 
