@@ -2,44 +2,52 @@ package main
 
 import (
 	"flag"
-	"log"
 	"os"
 
 	"github.com/mtenrero/AutomationTestQueue/serviceDiscovery"
+	"github.com/sirupsen/logrus"
 )
 
 var gWardrobe Wardrobe
 
+func init() {
+	logrus.SetOutput(os.Stdout)
+}
+
 func main() {
+	logger := logrus.New()
 
 	var mode = flag.String("mode", "controller", "ATQ start mode: controller/registrator/brainmaster")
 	flag.Parse()
 
 	switch *mode {
 	case "controller":
-		startController()
+		logger.WithField("mode", *mode).Info("Starting Controller Mode…")
+		startController(logger)
 	case "registrator":
+		logger.WithField("mode", *mode).Info("Starting Registrator Mode…")
 		startRegistrator()
 	case "brainmaster":
+		logger.WithField("mode", *mode).Info("Starting BrainMaster Mode…")
 		startBrainMaster()
 	default:
-		log.Fatal("No valid ATQ execution mode detected! controller/registrator/brainmaster")
+		logger.WithField("mode", *mode).Fatal("No valid ATQ execution mode detected!")
 		os.Exit(-1)
 	}
 }
 
-func startController() {
+func startController(logger *logrus.Logger) {
+
 	registry := serviceDiscovery.NewRegistryCollection()
 
 	atqContext := ATQContext{registry: registry}
 
-	engine := controllerNetworkHandler(&atqContext)
+	engine := controllerNetworkHandler(&atqContext, logger)
 	engine.Run()
-
 }
 
 func startRegistrator() {
-
+	serviceDiscovery.Register()
 }
 
 func startBrainMaster() {

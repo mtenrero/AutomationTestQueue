@@ -5,64 +5,69 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strconv"
 
-	"github.com/mtenrero/AutomationTestQueue/dockerResolver"
+	log "github.com/sirupsen/logrus"
 )
+
+// controllerPath defines the HTTP Path which will be called to register the container
+var controllerPath = "/v1/container"
 
 // Register a new container in the Registry
 func Register() error {
 	fcAddr, err := GetFlightControllerEnv()
-	if err == nil {
+	if err != nil {
+		logger.WithFields(log.Fields{
+			"event": "getFlightControllerEnv",
+			"error": err,
+		}).Error("Failed to get Controller endpoint environment variable")
 		return err
 	}
 
 	ipAddr, err := getVIP()
-	if err == nil {
+	if err != nil {
+		logger.WithFields(log.Fields{
+			"event": "getVIP",
+			"error": err,
+		}).Error("Failed to get container/host address")
 		return err
 	}
 
-	fullAddr := fcAddr.Hostname + ":" + strconv.Itoa(fcAddr.Port)
-
-	register(fullAddr, ipAddr)
+	register(fcAddr, ipAddr)
 	return nil
-
 }
 
-func ControllerAlive() bool {
+func register(fcAddr *url.URL, containerIP *net.IP) (*RegistryEntry, error) {
 
-	return true
-}
+	registerLogger := logger.WithFields(log.Fields{
+		"event": "POSTregister"})
 
-func checkRegistration() bool {
-
-	return true
-}
-
-func getVIP() (*net.IP, error) {
-	hostname, err := dockerResolver.GetHostname()
-	if err == nil {
-		return nil, err
-	}
-
-	ipAddr, err := dockerResolver.GetVIP4(hostname)
-	if err == nil {
-		return nil, err
-	}
-
-	return ipAddr, nil
-}
-
-func register(fcAddr string, containerIP *net.IP) (*RegistryEntry, error) {
 	form := url.Values{
 		"containerIP": {containerIP.String()},
+		"group":       {"ATQ"},
 	}
 
 	body := bytes.NewBufferString(form.Encode())
 
-	_, err := http.Post(fcAddr, "application/x-www-form-urlencoded", body)
+	resp, err := http.Post(fcAddr.String()+controllerPath, "application/x-www-form-urlencoded", body)
 	if err != nil {
+		registerLogger.WithFields(log.Fields{
+			"error": err,
+		}).Error("Failed to Register the container in the Controller")
 		return nil, err
+	}
+
+	switch resp.StatusCode {
+	case 200:
+		registerLogger.WithFields(log.Fields{
+			"statusCode": resp.StatusCode}).Info("The container was succesfully registered")
+		break
+	case 409:
+		registerLogger.WithFields(log.Fields{
+			"statusCode": resp.StatusCode}).Warn("The container it's already registered")
+		break
+	default:
+		registerLogger.WithFields(log.Fields{
+			"statusCode": resp.StatusCode}).Error("Unexptected HTTP Response registering the container")
 	}
 
 	return nil, newErrMissingEnvs("Unable to contact with FlightController")

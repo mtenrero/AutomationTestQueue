@@ -1,13 +1,18 @@
 package dockerResolver
 
 import (
-	"fmt"
 	"net"
 	"os"
 	"strings"
 
 	"github.com/lextoumbourou/goodhosts"
+	"github.com/sirupsen/logrus"
 )
+
+var logger = logrus.WithFields(logrus.Fields{
+	"action": "dockerresolver",
+	"mode":   "registrator",
+})
 
 type ErrNoHostname struct {
 	message string
@@ -45,6 +50,7 @@ func newErrNoIPV4Found(message string, ip net.IP) *ErrNoIPV4Found {
 func GetHostname() (string, error) {
 	name, err := os.Hostname()
 	if err == nil {
+		logger.WithField("hostname", name).Info("Hostname acquired")
 		return name, nil
 	}
 	return "", newErrNoHostname("This host or container doesn't have a hostname configured")
@@ -55,16 +61,17 @@ func GetVIP4(hostname string) (*net.IP, error) {
 
 	hosts, err := goodhosts.NewHosts()
 	if err != nil {
+		logger.WithField("goodhosts", err.Error()).Error("GoodHosts library failed!")
 		return nil, err
 	}
 
 	for _, line := range hosts.Lines {
 		for _, host := range line.Hosts {
 			if strings.Contains(host, hostname) {
+				logger.WithField("goodhosts", host).Info("Hostname found in hosts file")
 				ipaddr := net.ParseIP(line.IP)
 
 				if ipaddr.To4() != nil {
-					fmt.Println(line.IP)
 					return &ipaddr, nil
 				}
 			}

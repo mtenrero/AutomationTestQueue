@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -66,7 +64,6 @@ func (registryColl *ATQContext) postRegisterNewContainer(context *gin.Context) {
 
 	newRegistryColl, err := registryColl.registry.Add(regEntry)
 	if err != nil {
-		log.Print(err.Error())
 		context.JSON(http.StatusConflict, gin.H{"message": "This container is already registered!", "registryEntry": registryColl.registry.IsRegistered(hostname)})
 	} else {
 		registryColl.registry = newRegistryColl
@@ -115,8 +112,6 @@ func (registryColl *ATQContext) postRegisterNewContainer(context *gin.Context) {
 */
 func (registryColl *ATQContext) getContainer(context *gin.Context) {
 	hostname := context.Param("hostname")
-
-	fmt.Println("hostname: " + hostname)
 
 	registryEntry := registryColl.registry.IsRegistered(hostname)
 	if registryEntry == nil {

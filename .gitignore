@@ -29,3 +29,4 @@ serviceDiscovery/debug.test
 debug.test
 toolRunner/debug.test
 debug.*
+releases/*
