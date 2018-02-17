@@ -49,3 +49,18 @@ func TestRegistration(t *testing.T) {
 
 	assert.Equal(t, 200, recorder.Code)
 }
+
+func TestCSV(t *testing.T) {
+	registry := serviceDiscovery.NewRegistryCollection()
+
+	atqContext := ATQContext{registry: registry}
+
+	engine := controllerNetworkHandler(&atqContext, logrus.New())
+
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", apiVersion+"/containers/GROUP/csv", nil)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, 200, recorder.Code)
+}
