@@ -32,18 +32,27 @@ func Register() error {
 		return err
 	}
 
-	register(fcAddr, ipAddr)
+	group, err := GetControllerGroupEnv()
+	if err != nil {
+		logger.WithFields(log.Fields{
+			"event": "getControllerGroupEnv",
+			"error": err,
+		}).Error("Failed to get container group environment variable")
+		return err
+	}
+
+	register(fcAddr, ipAddr, group)
 	return nil
 }
 
-func register(fcAddr *url.URL, containerIP *net.IP) (*RegistryEntry, error) {
+func register(fcAddr *url.URL, containerIP *net.IP, group string) (*RegistryEntry, error) {
 
 	registerLogger := logger.WithFields(log.Fields{
 		"event": "POSTregister"})
 
 	form := url.Values{
 		"containerIP": {containerIP.String()},
-		"group":       {"ATQ"},
+		"group":       {group},
 	}
 
 	body := bytes.NewBufferString(form.Encode())

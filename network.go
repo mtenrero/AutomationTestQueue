@@ -40,6 +40,7 @@ func controllerNetworkHandler(context *ATQContext, logger *logrus.Logger) *gin.E
 	})
 
 	engine.POST("/v1/container", context.postRegisterNewContainer)
+	engine.GET("/v1/containers/:group/csv", context.GetPlainCsvIps)
 	engine.GET("/v1/containers/:group", context.GetContainersByGroup)
 	engine.GET("/v1/container/:hostname", context.getContainer)
 

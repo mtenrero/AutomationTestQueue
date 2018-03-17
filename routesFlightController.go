@@ -161,3 +161,28 @@ func (registryColl *ATQContext) GetContainersByGroup(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"message": "These containers are members of the group " + group, "registryCollection": registryCollGrouped})
 	}
 }
+
+// GetPlainCsvIps returns the string with the ips inside a registry given a group
+/**
+ * @api {get} /containers/:group/csv Get Containers members of a group
+ * @apiGroup FlightController
+ *
+ * @apiParam (group) {String} group name of the cluster
+ *
+ * @apiSuccess {String} Comma Separated Ips.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *	   10.0.0.2,10.0.0.3,10.0.0.4
+ */
+func (registryColl *ATQContext) GetPlainCsvIps(context *gin.Context) {
+	group := context.Param("group")
+
+	if len(group) == 0 {
+		context.JSON(http.StatusExpectationFailed, gin.H{"message": "The required parameters are not provided! (group)"})
+	} else {
+		registryFiltered := registryColl.registry.RegistriesMembersOf(group)
+		vipsStringCsv := registryFiltered.IpsToCsv()
+		context.String(http.StatusOK, vipsStringCsv)
+	}
+}

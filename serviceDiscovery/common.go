@@ -9,8 +9,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// ENDPOINT URL given by user by Environment Variable
-const ENDPOINT = "ATQCONTROLLER_ENDPOINT"
+// EndpointEnv URL given by user by Environment Variable
+const EndpointEnv = "ATQCONTROLLER_ENDPOINT"
+
+// GroupEnv holds the Env Variable for the group which will be registered
+const GroupEnv = "ATQCONTROLLER_GROUP"
 
 var logger = log.WithFields(log.Fields{
 	"action": "register",
@@ -35,10 +38,10 @@ func (e *ErrMissingEnvs) Error() string {
 
 // GetFlightControllerEnv returns the Address of the FlightController if defined
 func GetFlightControllerEnv() (*url.URL, error) {
-	endpointStr, endpointValid := os.LookupEnv(ENDPOINT)
+	endpointStr, endpointValid := os.LookupEnv(EndpointEnv)
 
 	if !endpointValid {
-		logger.WithField(ENDPOINT, endpointStr).Warn("The Controller Hostname Env has not been declared")
+		logger.WithField(EndpointEnv, endpointStr).Warn("The Controller Hostname Env has not been declared")
 		return nil, newErrMissingEnvs("The environment variables should be already declared")
 	}
 
@@ -48,6 +51,18 @@ func GetFlightControllerEnv() (*url.URL, error) {
 	}
 
 	return url, nil
+}
+
+// GetControllerGroup returns the group specified by the user via Environment Variables
+func GetControllerGroupEnv() (string, error) {
+	groupStr, groupValid := os.LookupEnv(GroupEnv)
+
+	if !groupValid {
+		logger.WithField(GroupEnv, groupStr).Warn("The Controller Hostname Env has not been declared")
+		return "", newErrMissingEnvs("The environment variables should be already declared")
+	}
+
+	return groupStr, nil
 }
 
 func getVIP() (*net.IP, error) {
