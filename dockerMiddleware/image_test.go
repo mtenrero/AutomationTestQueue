@@ -43,3 +43,11 @@ func TestPullImageFail(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestRetrieveImages(t *testing.T) {
+	_, err := listLocalImages()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+}

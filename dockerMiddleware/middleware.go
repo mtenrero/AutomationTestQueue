@@ -19,6 +19,20 @@ func getClient() *client.Client {
 	return cli
 }
 
+// listLocalImages returns an array containing all images locally available
+func listLocalImages() ([]types.ImageSummary, error) {
+	client := getClient()
+
+	images, err := client.ImageList(context.Background(), types.ImageListOptions{})
+	if err != nil {
+		logger.WithField("query", "ImageList").Warn(err)
+		return nil, err
+	}
+
+	logger.WithField("query", "ImageList").Info("Retrieved local images")
+	return images, nil
+}
+
 // imageLocallyAvalilable returns the specified image Summary if it's available in the system, otherwise, it will return an error
 func imageLocallyAvalilable(imageName string) (*types.ImageSummary, error) {
 	client := getClient()
