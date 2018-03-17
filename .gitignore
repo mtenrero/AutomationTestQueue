@@ -30,3 +30,6 @@ debug.test
 toolRunner/debug.test
 debug.*
 releases/*
+*.DS_Store
+AutomationTestQueue
+coverage.txt
