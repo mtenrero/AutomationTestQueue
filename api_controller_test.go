@@ -120,3 +120,19 @@ func TestRegisterContainerAlreadyRegistered(t *testing.T) {
 
 	assert.Equal(t, 409, recorder.Code)
 }
+
+func TestGetContainersByGroup(t *testing.T) {
+	registry := serviceDiscovery.NewRegistryCollection()
+	registryEntry := serviceDiscovery.MakeRegistryEntry(time.Now().Unix(), "10.0.0.1", "testinghost", "TESTING", 2)
+	registry, _ = registry.Add(registryEntry)
+
+	atqContext := ATQContext{registry: registry}
+
+	engine := controllerNetworkHandler(&atqContext, logrus.New())
+
+	recorder := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", apiVersion+"/containers/TESTING", nil)
+	engine.ServeHTTP(recorder, req)
+
+	assert.Equal(t, 200, recorder.Code)
+}

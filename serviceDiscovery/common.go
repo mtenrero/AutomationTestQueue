@@ -53,7 +53,7 @@ func GetFlightControllerEnv() (*url.URL, error) {
 	return url, nil
 }
 
-// GetControllerGroup returns the group specified by the user via Environment Variables
+// GetControllerGroupEnv returns the group specified by the user via Environment Variables
 func GetControllerGroupEnv() (string, error) {
 	groupStr, groupValid := os.LookupEnv(GroupEnv)
 
@@ -68,7 +68,7 @@ func GetControllerGroupEnv() (string, error) {
 func getVIP() (*net.IP, error) {
 	hostname, err := dockerResolver.GetHostname()
 	if err != nil {
-		logger.WithField("hostname", "dsa").Warn("ERROR")
+		logger.WithField("hostname", hostname).Warn("ERROR getting VIP")
 		return nil, err
 	}
 

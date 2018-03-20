@@ -154,12 +154,8 @@ func (registryColl *ATQContext) getContainer(context *gin.Context) {
 func (registryColl *ATQContext) GetContainersByGroup(context *gin.Context) {
 	group := context.Param("group")
 
-	if len(group) == 0 {
-		context.JSON(http.StatusExpectationFailed, gin.H{"message": "The required parameters are not provided! (group)"})
-	} else {
-		registryCollGrouped := registryColl.registry.RegistriesMembersOf(group)
-		context.JSON(http.StatusOK, gin.H{"message": "These containers are members of the group " + group, "registryCollection": registryCollGrouped})
-	}
+	registryCollGrouped := registryColl.registry.RegistriesMembersOf(group)
+	context.JSON(http.StatusOK, gin.H{"message": "These containers are members of the group " + group, "registryCollection": registryCollGrouped})
 }
 
 // GetPlainCsvIps returns the string with the ips inside a registry given a group
@@ -178,11 +174,7 @@ func (registryColl *ATQContext) GetContainersByGroup(context *gin.Context) {
 func (registryColl *ATQContext) GetPlainCsvIps(context *gin.Context) {
 	group := context.Param("group")
 
-	if len(group) == 0 {
-		context.JSON(http.StatusExpectationFailed, gin.H{"message": "The required parameters are not provided! (group)"})
-	} else {
-		registryFiltered := registryColl.registry.RegistriesMembersOf(group)
-		vipsStringCsv := registryFiltered.IpsToCsv()
-		context.String(http.StatusOK, vipsStringCsv)
-	}
+	registryFiltered := registryColl.registry.RegistriesMembersOf(group)
+	vipsStringCsv := registryFiltered.IpsToCsv()
+	context.String(http.StatusOK, vipsStringCsv)
 }
