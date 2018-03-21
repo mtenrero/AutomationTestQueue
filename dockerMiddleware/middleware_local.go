@@ -19,8 +19,8 @@ func getClient() *client.Client {
 	return cli
 }
 
-// listLocalImages returns an array containing all images locally available
-func listLocalImages() ([]types.ImageSummary, error) {
+// ListLocalImages returns an array containing all images locally available
+func ListLocalImages() ([]types.ImageSummary, error) {
 	client := getClient()
 
 	images, err := client.ImageList(context.Background(), types.ImageListOptions{})
@@ -33,8 +33,8 @@ func listLocalImages() ([]types.ImageSummary, error) {
 	return images, nil
 }
 
-// imageLocallyAvalilable returns the specified image Summary if it's available in the system, otherwise, it will return an error
-func imageLocallyAvalilable(imageName string) (*types.ImageSummary, error) {
+// ImageLocallyAvalilable returns the specified image Summary if it's available in the system, otherwise, it will return an error
+func ImageLocallyAvalilable(imageName string) (*types.ImageSummary, error) {
 	client := getClient()
 
 	images, err := client.ImageList(context.Background(), types.ImageListOptions{})
@@ -54,8 +54,8 @@ func imageLocallyAvalilable(imageName string) (*types.ImageSummary, error) {
 	return nil, errors.New("The image " + imageName + " is not available in the system!")
 }
 
-// pullImage pulls the specified image from Docker Registry or updates it if it's already downloaded
-func pullImage(imageName string) error {
+// PullImage pulls the specified image from Docker Registry or updates it if it's already downloaded
+func PullImage(imageName string) error {
 	client := getClient()
 
 	out, err := client.ImagePull(context.Background(), imageName, types.ImagePullOptions{})
@@ -68,4 +68,13 @@ func pullImage(imageName string) error {
 	defer out.Close()
 
 	return nil
+}
+
+// ListContainers returns the list of running containers in the host
+func ListContainers() ([]types.Container, error) {
+	client := getClient()
+
+	containers, err := client.ContainerList(context.Background(), types.ContainerListOptions{})
+
+	return containers, err
 }

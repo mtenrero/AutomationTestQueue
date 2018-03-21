@@ -5,7 +5,7 @@ import (
 )
 
 func TestImageLocallyAvailable(t *testing.T) {
-	image, err := imageLocallyAvalilable("hello-world")
+	image, err := ImageLocallyAvalilable("hello-world")
 
 	if err != nil {
 		t.Fatal(err)
@@ -17,7 +17,7 @@ func TestImageLocallyAvailable(t *testing.T) {
 }
 
 func TestImageLocallyFail(t *testing.T) {
-	image, err := imageLocallyAvalilable("NOT_FOUND_IMAGE")
+	image, err := ImageLocallyAvalilable("NOT_FOUND_IMAGE")
 
 	if err == nil {
 		t.Fatal("The image shouldn't be found")
@@ -29,7 +29,7 @@ func TestImageLocallyFail(t *testing.T) {
 }
 
 func TestPullImage(t *testing.T) {
-	err := pullImage("alpine")
+	err := PullImage("alpine")
 
 	if err != nil {
 		t.Fatal(err)
@@ -37,7 +37,7 @@ func TestPullImage(t *testing.T) {
 }
 
 func TestPullImageFail(t *testing.T) {
-	err := pullImage("alpineERROR")
+	err := PullImage("alpineERROR")
 
 	if err == nil {
 		t.Fatal(err)
@@ -45,7 +45,7 @@ func TestPullImageFail(t *testing.T) {
 }
 
 func TestRetrieveImages(t *testing.T) {
-	_, err := listLocalImages()
+	_, err := ListLocalImages()
 
 	if err != nil {
 		t.Fatal(err)

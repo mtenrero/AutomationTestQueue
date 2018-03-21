@@ -1,0 +1,10 @@
+port: 1050
+images:
+  - name: mtenrero/jmeter
+    variables:
+      - name: MODE
+        required: true
+      - name: TEST_NAME
+        required: false
+      - name: REMOTES
+        required: false
